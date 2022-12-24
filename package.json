@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "electron": "^22.0.0",
+    "pkg": "^5.8.0"
+  },
+  "scripts": {
+    "start": "electron ."
+  }
+}
