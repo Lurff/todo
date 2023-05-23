@@ -2,6 +2,7 @@ const todoList = document.getElementById("todo-list");
 const todoInput = document.getElementById("todo-input");
 const todoButton = document.getElementById("todo-button");
 const todoFilter = document.getElementById("todo-filter");
+const container = document.getElementById("container")
 
 const getTodosFromStorage = () => {
     const storage = JSON.parse(localStorage.getItem("todos"))
@@ -18,27 +19,111 @@ const dones = getDonesFromStorage()
 
 const getTodosToPage = () => {
     todos.forEach(todo => {
-        createTodoItem(todo)
+        createTodoItem(todo.text)
     })
 }
 
 const getDonesToPage = () => {
     dones.forEach(done => {
-        createDoneItem(done)
+        createDoneItem(done.text)
     })
 }
 
-const saveTodoStorage = (todo) => {
-    todos.push(todo)
+const saveTodoStorage = (todo,timestamps) => {
+
+    const todoObj = {
+        text: todo,
+        time: timestamps
+    }
+
+    todos.push(todoObj)
     localStorage.setItem("todos",JSON.stringify(todos))
     createTodoItem(todo)
 }
 
 todoButton.addEventListener("click",() => {
     const input = todoInput.value;
-    if(input) saveTodoStorage(input)
+    if (input) toggleTimeSettings(input) 
     todoInput.value = "";
 })
+
+const toggleTimeSettings = (input) => {
+
+    const suAn = new Date();
+    const ay = suAn.getMonth() + 1;   
+    const gun = suAn.getDate();
+    const yil = suAn.getFullYear();
+    const saat = suAn.getHours();
+    const dakika = suAn.getMinutes();
+
+    const an = `${yil}-${ay}-${gun}T${saat}:${dakika}`
+
+    const timedDiv = document.createElement("div")
+    timedDiv.classList.add("timeDiv")
+    timedDiv.id = "timeDiv"
+
+    const title = document.createElement("h1")
+    title.classList.add("timeTitle")
+    title.textContent = "Zamanı Ayarla"
+
+    const description = document.createElement("span")
+    description.textContent = "Ayarladığınız saatte sizin için bir bildirim sesi çalıcaktır."
+
+    const timeInput = document.createElement("div")
+    timeInput.classList.add("timeInput")
+
+    const toggleTimeInput = document.createElement("input")
+    toggleTimeInput.type = "datetime-local"
+    toggleTimeInput.id = "time"
+    toggleTimeInput.min = `${an}`
+    toggleTimeInput.required = true
+
+    const timeSubmitButton = document.createElement("button")
+    timeSubmitButton.id = "timeButton"
+    timeSubmitButton.textContent = "Gönder"
+
+    timeSubmitButton.addEventListener("click", () => {
+        doneTime(input, toggleTimeInput.value)
+    })
+
+    timeInput.appendChild(toggleTimeInput)
+    timeInput.appendChild(timeSubmitButton)
+
+    timedDiv.appendChild(title)
+    timedDiv.appendChild(description)
+    timedDiv.appendChild(timeInput)
+
+    container.appendChild(timedDiv)
+}
+
+const doneTime = (input, timestamps) => {
+
+    if (timestamps == "") return;
+    else {
+        document.getElementById("timeDiv").remove()
+        const time = new Date(timestamps).getTime()
+        saveTodoStorage(input, time)
+    }
+}
+
+const checkTime = () => {
+    const currentDate = new Date().toLocaleString()
+    
+    todos.forEach(async todo => {
+
+        const selectedDate = new Date(todo.time).toLocaleString()
+
+        if(currentDate == selectedDate) await playNotifications()
+
+    })
+}
+
+setInterval(checkTime, 1000)
+
+const playNotifications = async () => {
+    const song = new Audio(`./sound.mp3`)
+    await song.play()
+}
 
 todoInput.addEventListener("keyup",(event) => {
     if(event.keyCode == 13) todoButton.click()
@@ -62,9 +147,8 @@ const removeTodo = (target) => {
 
 const removeTodoFromStorage = (todo) => {
     const index = todos.indexOf(todo)
-
-    if(index > -1) {
-        todos.splice(index,1)
+    if(index == -1) {
+        todos.splice(index, 1)
         localStorage.setItem("todos",JSON.stringify(todos))
     }
 }
@@ -72,8 +156,8 @@ const removeTodoFromStorage = (todo) => {
 const removeDoneFromStorage = (done) => {
     const index = dones.indexOf(done)
 
-    if(index > -1) {
-        dones.splice(index,1)
+    if(index == -1) {
+        dones.splice(index, 1)
         localStorage.setItem("dones",JSON.stringify(dones))
     }
 }

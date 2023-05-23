@@ -118,7 +118,7 @@ body::after {
 }
 
 .card-footer input:focus, .card-footer button:focus {
-   outline: 0;   
+    outline: 0;   
 }
 
 .card-footer button {
@@ -140,6 +140,78 @@ body::after {
 
 .done {
     background-color: rgba(0, 0, 0, .5);
+}
+
+.timeDiv {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.timeDiv h1 {
+    margin: 5px;
+    color: #fff;
+    font-size: 2rem;
+}
+
+.timeDiv span {
+    color: #fff;
+}
+
+.timeInput {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.timeInput input {
+    outline: 0;
+    background-color: transparent;
+    color: #fff;
+    margin: 5px;
+    font-size: 1rem;
+    border: 1px solid #242424;
+    padding: 5px;
+    border-radius: 2px;
+    transition: all .2s;
+}
+
+.timeInput input:hover {
+    border-color: #383838;
+    background-color: #383838;
+}
+
+.timeInput ::-webkit-calendar-picker-indicator {
+    background-color: #fff;
+    width: 20px;
+    height: 20px;
+    border-radius: 18px;
+}
+
+.timeInput button {
+    border: 2px solid #242424;
+    background-color: transparent;
+    color: #fff;
+    padding: 5px;
+    margin: 5px;
+    font-size: 1rem;
+    transition: all .2s;
+    border-radius: 8px;
+}
+
+.timeInput button:hover {
+    background-color: #383838;
+    border-color: #383838;
+    transition: all .2s;
 }
 
 @media screen and (max-device-width: 1395px) {
